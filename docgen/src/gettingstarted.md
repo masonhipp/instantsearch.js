@@ -193,14 +193,16 @@ search result component:
 
 ```javascript
 // We need to add the highlight function to our import
-import {InstantSearch, Hits, SearchBox, highlight} from 'react-instantsearch/dom';
+import {InstantSearch, Hits, SearchBox, Highlight} from 'react-instantsearch/dom';
 
 // [...]
 
 function Product({hit}) {
   return (
     <div>
-      <span className="hit-name">{highlight('name', hit)}</span>
+      <span className="hit-name">
+        <Highlight attributeName="name" hit={hit} />
+      </span>
     </div>
   );
 };

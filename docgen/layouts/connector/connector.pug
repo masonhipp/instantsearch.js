@@ -3,7 +3,8 @@ extends ../archetypes/content-with-menu.pug
 include ../mixins/nav.pug
 
 block navigation
-  - var headings=[{tag: 'h2', id:'description', text: 'Description'}, {tag: 'h2', id:'proptypes', text: 'Exposed props'}, {tag: 'h2', id:'provided-props', text: 'Provided props'}, {tag: 'h2', id:'example', text: 'Example'}]
+  - var headings=[{tag: 'h2', id:'description', text: 'Description'}, {tag: 'h2', id:'proptypes', text: 'Exposed props'}, {tag: 'h2', id:'provided-props', text: 'Provided props'}]
+  - if(examples) headings.push({tag: 'h2', id:'example', text: 'Example'});
   +nav(navPath, navigation, title, headings)
 
 block content
@@ -52,3 +53,8 @@ block content
             td(colspan=3)!=h.markdown(type.description)
   else
     p This connector does not provided props to its wrapped Component.
+  if examples
+    h2#example Example
+      a.anchor(href='#example')
+    each example in examples
+      p!=h.highlight(example, {lang: 'jsx'})
