@@ -1,3 +1,4 @@
+import {PropTypes} from 'react';
 import createConnector from '../core/createConnector';
 import {omit} from 'lodash';
 
@@ -22,17 +23,30 @@ function getCurrentRefinement(props, state) {
  * @name connectHitsPerPage
  * @kind connector
  * @propType {number} defaultRefinement - The number of items selected by default
- * @propType {{value, label}[]|number[]} items - List of hits per page options. Passing a list of numbers [n] is a shorthand for [{value: n, label: n}].
+ * @propType {{value: number, label: string||number}[]} items - List of hits per page options.
  * @providedPropType {function} refine - a function to remove a single filter
  * @providedPropType {function} createURL - a function to generate a URL for the corresponding state
  * @providedPropType {string} currentRefinement - the refinement currently applied
+ * @providedPropType {array.<{isRefined: boolean, label: string||number, value: number}>} items - the list of items the HitsPerPage can display.
  */
 export default createConnector({
   displayName: 'AlgoliaHitsPerPage',
 
+  propTypes: {
+    defaultRefinement: PropTypes.number.isRequired,
+    items: PropTypes.arrayOf(PropTypes.shape({
+      label: PropTypes.string.isRequired,
+      value: PropTypes.number.isRequired,
+    })).isRequired,
+  },
+
   getProps(props, state) {
+    const currentRefinement = getCurrentRefinement(props, state);
+    const items = props.items.map(i => i.value === currentRefinement
+      ? {...i, isRefined: true} : {...i, isRefined: false});
     return {
-      currentRefinement: getCurrentRefinement(props, state),
+      items,
+      currentRefinement,
     };
   },
 
